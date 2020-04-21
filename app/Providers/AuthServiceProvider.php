@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -21,10 +21,18 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(GateContract $gate)
     {
-        $this->registerPolicies();
+        $this->registerPolicies($gate);
 
-        //
+        $gate->define('hasAssigned', function ($user, $task) {
+            return $user->id == $task->user_assign_id;
+        });
+        $gate->define('hasCreated', function ($user, $task) {
+            return $user->id == $task->user_id;
+        });
+        $gate->define('hasCreatedOrAssigned', function ($user, $task) {
+            return in_array($user->id,[$task->user_id,$task->user_assign_id]);
+        });
     }
 }
