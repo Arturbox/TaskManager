@@ -13,14 +13,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+//Route::get('/', function () {
+//    return view('welcome');
+//});
+
+
+Auth::routes();
+
+Route::get('/', 'HomeController@index');
+
+Route::group(['middleware'=>'auth','namespaces'=>'/'],function () {
+    Route::resource('tasks','TaskController');
+    Route::get('averageTasks','TaskController@averageTasks')->name('averageTasks');
 });
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
