@@ -18,7 +18,7 @@ class CreateTasksTable extends Migration
             $table->bigInteger('user_id')->index()->unsigned();
             $table->integer('user_assign_id')->index();
             $table->string('title');
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')
